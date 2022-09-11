@@ -19,7 +19,6 @@ extern "C" {
 }
 #include "vars.h"
 
-
 ErrorOr<int> serenity_main(Main::Arguments arguments)
 {
     char const* image_location = nullptr;
@@ -60,9 +59,18 @@ ErrorOr<int> serenity_main(Main::Arguments arguments)
             unsigned char green_data = data[pixel_index+1];
             unsigned char blue_data = data[pixel_index+2];
             unsigned char alpha_data = data[pixel_index+3];
-            outln("Debug mode: {}", DEBUG_MODE);
+
             if (DEBUG_MODE == 1) printf("Pixel at %d,%d\twith red value: %d\tand green value: %d\tand blue value: %d\tand alpha value: %d\n", y_index, x_index, red_data, green_data, blue_data, alpha_data);
+
+            // TODO: Include the alpha channel as well
+            unsigned char greyscale_data = (red_data * 0.30) + (green_data * 0.59) + (blue_data * 0.11);
+
+	    // figure out which ascii to use 
+	    int ascii_index = (int) ((greyscale_data * (sizeof(brightness_ascii) / sizeof(char)-1)) / 255);
+	    char *ascii = brightness_ascii + ascii_index; 
+	    printf("%c", *ascii);
         }
+	printf("\n");
     }
 
     return 0;
